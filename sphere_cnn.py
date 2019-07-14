@@ -94,7 +94,7 @@ class SphereConv2D(nn.Module):
         self.out_c = out_c
         self.stride = stride
         self.mode = mode
-        self.weight = Parameter(torch.Tensor(out_c, in_c, 3, 3))
+        self.weight = Parameter(torch.Tensor(out_c, in_c, in_c, 3))
         if bias:
             self.bias = Parameter(torch.Tensor(out_c))
         else:
@@ -150,33 +150,33 @@ class SphereMaxPool2D(nn.Module):
         return self.pool(nn.functional.grid_sample(x, grid, mode=self.mode))
 
 
-if __name__ == '__main__':
-    import matplotlib.pyplot as plt
-    import matplotlib.image as mpimg
-    # test cnn
-    cnn = SphereConv2D(3, 5, 1)
-    out = cnn(torch.randn(2, 3, 10, 10))
-    print('SphereConv2D(3, 5, 1) output shape: ', out.size())
-    # test pool
-    # create sample image
-    h, w = 100, 200
-    img = np.ones([h, w, 3])
-    for r in range(h):
-        for c in range(w):
-            img[r, c, 0] = img[r, c, 0] - r/h
-            img[r, c, 1] = img[r, c, 1] - c/w
-    plt.imsave('demo_original', img)
-    img = img.transpose([2, 0, 1])
-    img = np.expand_dims(img, 0)  # (B, C, H, W)
-    # pool
-    pool = SphereMaxPool2D(1)
-    out = pool(torch.from_numpy(img).float())
-    out = np.squeeze(out.numpy(), 0).transpose([1, 2, 0])
-    plt.imsave('demo_pool_1.png', out)
-    print('Save image after pooling with stride 1: demo_pool_1.png')
-    # pool with tride 3
-    pool = SphereMaxPool2D(3)
-    out = pool(torch.from_numpy(img).float())
-    out = np.squeeze(out.numpy(), 0).transpose([1, 2, 0])
-    plt.imsave('demo_pool_3.png', out)
-    print('Save image after pooling with stride 3: demo_pool_3.png')
+# if __name__ == '__main__':
+#     import matplotlib.pyplot as plt
+#     import matplotlib.image as mpimg
+#     # test cnn
+#     cnn = SphereConv2D(3, 5, 1)
+#     out = cnn(torch.randn(2, 3, 10, 10))
+#     print('SphereConv2D(3, 5, 1) output shape: ', out.size())
+#     # test pool
+#     # create sample image
+#     h, w = 100, 200
+#     img = np.ones([h, w, 3])
+#     for r in range(h):
+#         for c in range(w):
+#             img[r, c, 0] = img[r, c, 0] - r/h
+#             img[r, c, 1] = img[r, c, 1] - c/w
+#     plt.imsave('demo_original', img)
+#     img = img.transpose([2, 0, 1])
+#     img = np.expand_dims(img, 0)  # (B, C, H, W)
+#     # pool
+#     pool = SphereMaxPool2D(1)
+#     out = pool(torch.from_numpy(img).float())
+#     out = np.squeeze(out.numpy(), 0).transpose([1, 2, 0])
+#     plt.imsave('demo_pool_1.png', out)
+#     print('Save image after pooling with stride 1: demo_pool_1.png')
+#     # pool with tride 3
+#     pool = SphereMaxPool2D(3)
+#     out = pool(torch.from_numpy(img).float())
+#     out = np.squeeze(out.numpy(), 0).transpose([1, 2, 0])
+#     plt.imsave('demo_pool_3.png', out)
+#     print('Save image after pooling with stride 3: demo_pool_3.png')

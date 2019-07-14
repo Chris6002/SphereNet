@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 import time
 import os
 import copy
-import vgg
+from vgg import vgg16_bn
 
 plt.ion()  
 
@@ -20,10 +20,10 @@ use_gpu = torch.cuda.is_available()
 if use_gpu:
     print("Using CUDA")
 
-data_dir = '../input/kermany2018/oct2017/OCT2017 '
+data_dir = '~/Downloads/OCT2017'
 
 TRAIN = 'train'
-VAL = 'val'
+
 TEST = 'test'
 
 # VGG-16 Takes 224x224 images as input, so we resize all of them
@@ -36,11 +36,7 @@ data_transforms = {
         transforms.RandomHorizontalFlip(),
         transforms.ToTensor(),
     ]),
-    VAL: transforms.Compose([
-        transforms.Resize(256),
-        transforms.CenterCrop(224),
-        transforms.ToTensor(),
-    ]),
+   
     TEST: transforms.Compose([
         transforms.Resize(256),
         transforms.CenterCrop(224),
@@ -53,7 +49,7 @@ image_datasets = {
         os.path.join(data_dir, x), 
         transform=data_transforms[x]
     )
-    for x in [TRAIN, VAL, TEST]
+    for x in [TRAIN,TEST]
 }
 
 dataloaders = {
@@ -61,12 +57,12 @@ dataloaders = {
         image_datasets[x], batch_size=8,
         shuffle=True, num_workers=4
     )
-    for x in [TRAIN, VAL, TEST]
+    for x in [TRAIN, TEST]
 }
 
-dataset_sizes = {x: len(image_datasets[x]) for x in [TRAIN, VAL, TEST]}
+dataset_sizes = {x: len(image_datasets[x]) for x in [TRAIN, TEST]}
 
-for x in [TRAIN, VAL, TEST]:
+for x in [TRAIN, TEST]:
     print("Loaded {} images under {}".format(dataset_sizes[x], x))
     
 print("Classes: ")
