@@ -65,8 +65,10 @@ def make_layers(cfg, batch_norm=False):
     in_channels = 3
 
     sphere_conv2 = SphereConv2D(in_channels, 64)
+    
     layers += [sphere_conv2, nn.BatchNorm2d(64), nn.ReLU(inplace=True)]
 
+    in_channels = 64
     for v in cfg:
         if v == 'M':
             layers += [nn.MaxPool2d(kernel_size=2, stride=2)]

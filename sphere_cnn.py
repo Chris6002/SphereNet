@@ -94,7 +94,7 @@ class SphereConv2D(nn.Module):
         self.out_c = out_c
         self.stride = stride
         self.mode = mode
-        self.weight = Parameter(torch.Tensor(out_c, in_c, in_c, 3))
+        self.weight = Parameter(torch.Tensor(out_c, in_c, 3, 3))
         if bias:
             self.bias = Parameter(torch.Tensor(out_c))
         else:
